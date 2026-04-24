@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recursos BI con Power BI — USMP Virtual</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rojo: #C0181B;
+    --rojo-oscuro: #8B0000;
+    --rojo-suave: #E8272A;
+    --crema: #FAF7F2;
+    --carbon: #1A1A1A;
+    --gris: #6B6B6B;
+    --gris-claro: #E8E4DE;
+    --blanco: #FFFFFF;
+    --accent: #F5A623;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--crema);
+    color: var(--carbon);
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ─────────────────────────────────────────────── */
+  .hero {
+    background: var(--rojo-oscuro);
+    color: var(--blanco);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    min-height: 340px;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 110% 40%, rgba(192,24,27,0.5) 0%, transparent 70%),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,0.025) 40px,
+        rgba(255,255,255,0.025) 41px
+      );
+  }
+
+  .hero-dots {
+    position: absolute;
+    top: 28px; right: 36px;
+    display: grid;
+    grid-template-columns: repeat(4, 8px);
+    grid-template-rows: repeat(4, 8px);
+    gap: 10px;
+    opacity: 0.35;
+  }
+  .hero-dots span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--blanco);
+    display: block;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 64px 32px 48px;
+    width: 100%;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: var(--blanco);
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 span { color: var(--accent); }
+
+  .hero p {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.8);
+    max-width: 520px;
+    margin-bottom: 32px;
+  }
+
+  /* ── NAV MÓDULOS ──────────────────────────────────────── */
+  .modulos-nav {
+    background: var(--rojo);
+    padding: 0 32px;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .modulos-nav::-webkit-scrollbar { display: none; }
+
+  .modulos-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 0;
+    white-space: nowrap;
+  }
+
+  .modulos-nav a {
+    display: block;
+    padding: 16px 20px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  .modulos-nav a:hover,
+  .modulos-nav a.active {
+    color: var(--blanco);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ── LAYOUT PRINCIPAL ─────────────────────────────────── */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  section.modulo-section {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--gris-claro);
+  }
+  section.modulo-section:last-of-type { border-bottom: none; }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .modulo-num {
+    background: var(--rojo);
+    color: var(--blanco);
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+
+  .section-label span {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    color: var(--gris);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+
+  .section-desc {
+    color: var(--gris);
+    font-size: 14px;
+    margin-bottom: 32px;
+    max-width: 600px;
+  }
+
+  /* ── CARDS ────────────────────────────────────────────── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--blanco);
+    border: 1px solid var(--gris-claro);
+    border-radius: 6px;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--carbon);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--rojo);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  .card:hover {
+    border-color: rgba(192,24,27,0.25);
+    box-shadow: 0 4px 20px rgba(192,24,27,0.08);
+    transform: translateY(-2px);
+  }
+  .card:hover::after { transform: scaleX(1); }
+
+  .card-type {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    display: inline-block;
+    align-self: flex-start;
+  }
+
+  .card-type.doc    { background: #EBF4FF; color: #1A6BA0; }
+  .card-type.video  { background: #FFF0F0; color: #C0181B; }
+  .card-type.data   { background: #F0FFF4; color: #276749; }
+  .card-type.tool   { background: #FFFAF0; color: #9A5B00; }
+  .card-type.curso  { background: #F3F0FF; color: #553C9A; }
+  .card-type.blog   { background: #F0F9FF; color: #0C6C9E; }
+
+  .card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .card p {
+    font-size: 13px;
+    color: var(--gris);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .card-arrow {
+    margin-top: 4px;
+    font-size: 18px;
+    color: var(--rojo);
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    align-self: flex-end;
+  }
+  .card:hover .card-arrow { opacity: 1; transform: translate(2px, -2px); }
+
+  /* ── CHEATSHEET ───────────────────────────────────────── */
+  .cheatsheet {
+    background: var(--blanco);
+    border: 1px solid var(--gris-claro);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 24px;
+  }
+
+  .cheatsheet-header {
+    background: var(--carbon);
+    color: var(--blanco);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cheatsheet-header span {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .dot-r { background: #FF5F56; }
+  .dot-y { background: #FFBD2E; }
+  .dot-g { background: #27C93F; }
+
+  .cheatsheet-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .cs-item {
+    padding: 16px 20px;
+    border-right: 1px solid var(--gris-claro);
+    border-bottom: 1px solid var(--gris-claro);
+  }
+
+  .cs-func {
+    font-family: 'DM Sans', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rojo);
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .cs-desc {
+    font-size: 12px;
+    color: var(--gris);
+    line-height: 1.4;
+  }
+
+  .cs-example {
+    margin-top: 6px;
+    background: #F8F5F0;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--carbon);
+    font-family: monospace;
+  }
+
+  /* ── GLOSARIO ─────────────────────────────────────────── */
+  .glosario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .glosario-item {
+    background: var(--blanco);
+    border: 1px solid var(--gris-claro);
+    border-left: 4px solid var(--rojo);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 16px;
+  }
+
+  .glosario-term {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: var(--rojo-oscuro);
+  }
+
+  .glosario-def {
+    font-size: 12.5px;
+    color: var(--gris);
+    line-height: 1.5;
+  }
+
+  /* ── DATASETS ─────────────────────────────────────────── */
+  .dataset-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    background: var(--blanco);
+    border: 1px solid var(--gris-claro);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: var(--carbon);
+    transition: all 0.2s;
+  }
+  .dataset-row:hover {
+    border-color: rgba(192,24,27,0.25);
+    transform: translateX(4px);
+    box-shadow: -4px 0 0 var(--rojo);
+  }
+
+  .dataset-icon {
+    width: 36px; height: 36px;
+    background: #FFF0F0;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .dataset-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .dataset-desc { font-size: 12px; color: var(--gris); }
+
+  .dataset-modulo {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    background: #FFF0F0;
+    color: var(--rojo);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .dataset-source {
+    font-size: 11px;
+    color: var(--gris);
+    white-space: nowrap;
+  }
+
+  /* ── FOOTER ───────────────────────────────────────────── */
+  footer {
+    background: var(--carbon);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 32px;
+    font-size: 13px;
+    margin-top: 64px;
+  }
+  footer strong { color: var(--blanco); }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* ── SCROLL PROGRESS ──────────────────────────────────── */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--rojo);
+    width: 0%;
+    z-index: 999;
+    transition: width 0.1s linear;
+  }
+
+  /* ── ANIMATIONS ───────────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-inner > * {
+    animation: fadeUp 0.6s ease forwards;
+    opacity: 0;
+  }
+  .hero-inner > *:nth-child(1) { animation-delay: 0.1s; }
+  .hero-inner > *:nth-child(2) { animation-delay: 0.2s; }
+  .hero-inner > *:nth-child(3) { animation-delay: 0.3s; }
+  .hero-inner > *:nth-child(4) { animation-delay: 0.4s; }
+
+  /* ── RESPONSIVE ───────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .container { padding: 0 16px; }
+    section.modulo-section { padding: 40px 0 32px; }
+    .dataset-row { grid-template-columns: auto 1fr; }
+    .dataset-modulo, .dataset-source { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-dots">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-badge">USMP Virtual · Bootcamp</div>
+    <h1>Business Intelligence<br>con <span>Power BI</span></h1>
+    <p>Recursos, referencias rápidas, datasets y glosario para acompañar cada módulo del programa.</p>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="modulos-nav" aria-label="Navegación de módulos">
+  <ul>
+    <li><a href="#m1" class="active">M1 · Fundamentos BI</a></li>
+    <li><a href="#m2">M2 · Power BI</a></li>
+    <li><a href="#m3">M3 · Power Query</a></li>
+    <li><a href="#m4">M4 · Modelado</a></li>
+    <li><a href="#m5">M5 · DAX</a></li>
+    <li><a href="#m6">M6 · Dashboards</a></li>
+    <li><a href="#glosario">Glosario</a></li>
+    <li><a href="#datasets">Datasets</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════ M1 -->
+<section class="modulo-section" id="m1">
+  <div class="container">
+    <div class="section-label">
+      <span class="modulo-num">Módulo 1</span>
+      <span>11 horas · 7 teóricas + 4 prácticas</span>
+    </div>
+    <h2 class="section-title">Fundamentos de Business Intelligence</h2>
+    <p class="section-desc">Data-driven thinking, ecosistema BI, tipos de datos y calidad de la información.</p>
+    <div class="cards-grid">
+
+      <a class="card" href="https://docs.microsoft.com/es-es/power-bi/fundamentals/power-bi-overview" target="_blank" rel="noopener">
+        <span class="card-type doc">Documentación</span>
+        <h3>¿Qué es Power BI? — Microsoft Docs</h3>
+        <p>Introducción oficial al ecosistema Power BI: Desktop, Service y Mobile.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.gartner.com/en/information-technology/glossary/business-intelligence-bi" target="_blank" rel="noopener">
+        <span class="card-type doc">Referencia</span>
+        <h3>Definición de BI — Gartner Glossary</h3>
+        <p>Definición de Business Intelligence desde la perspectiva de analistas de la industria.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.youtube.com/watch?v=yKTSLffVGbk" target="_blank" rel="noopener">
+        <span class="card-type video">Video</span>
+        <h3>Business Intelligence explicado en 5 minutos</h3>
+        <p>Conceptos clave del BI y cómo se usa en empresas reales.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.kaggle.com/learn/data-cleaning" target="_blank" rel="noopener">
+        <span class="card-type curso">Curso gratuito</span>
+        <h3>Data Cleaning — Kaggle Learn</h3>
+        <p>Fundamentos de limpieza de datos: valores nulos, inconsistencias y formatos.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://towardsdatascience.com/data-driven-decisions-why-they-matter-b0d1abb01bc8" target="_blank" rel="noopener">
+        <span class="card-type blog">Artículo</span>
+        <h3>Data-Driven Decisions: por qué importan</h3>
+        <p>Comparativa entre decisiones basadas en datos vs intuición, con casos reales.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.dama.org/cpages/body-of-knowledge" target="_blank" rel="noopener">
+        <span class="card-type doc">Marco de referencia</span>
+        <h3>DAMA DMBOK — Gestión del Dato</h3>
+        <p>El marco de referencia global para la gestión de datos empresariales.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ M2 -->
+<section class="modulo-section" id="m2">
+  <div class="container">
+    <div class="section-label">
+      <span class="modulo-num">Módulo 2</span>
+      <span>11 horas · 7 teóricas + 4 prácticas</span>
+    </div>
+    <h2 class="section-title">Introducción a Power BI</h2>
+    <p class="section-desc">Arquitectura, conexión a datos, visualizaciones básicas y mejores prácticas.</p>
+    <div class="cards-grid">
+
+      <a class="card" href="https://learn.microsoft.com/es-es/training/paths/create-use-analytics-reports-power-bi/" target="_blank" rel="noopener">
+        <span class="card-type curso">Microsoft Learn</span>
+        <h3>Ruta oficial: Crear informes con Power BI</h3>
+        <p>Ruta de aprendizaje gratuita y certificada de Microsoft para Power BI desde cero.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.youtube.com/c/GuyInACube" target="_blank" rel="noopener">
+        <span class="card-type video">Canal YouTube</span>
+        <h3>Guy in a Cube</h3>
+        <p>Canal de referencia con tutoriales semanales de Power BI, trucos y novedades.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://powerbi.microsoft.com/es-es/desktop/" target="_blank" rel="noopener">
+        <span class="card-type tool">Herramienta</span>
+        <h3>Descargar Power BI Desktop</h3>
+        <p>Descarga gratuita oficial de Power BI Desktop para Windows.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://community.fabric.microsoft.com/t5/Power-BI-Community/ct-p/PBI_Community" target="_blank" rel="noopener">
+        <span class="card-type doc">Comunidad</span>
+        <h3>Power BI Community</h3>
+        <p>Foro oficial de Microsoft para resolver dudas, compartir soluciones y aprender.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://learn.microsoft.com/es-es/power-bi/visuals/power-bi-visualization-types-for-reports-and-q-and-a" target="_blank" rel="noopener">
+        <span class="card-type doc">Referencia</span>
+        <h3>Tipos de visualizaciones en Power BI</h3>
+        <p>Guía oficial con todos los tipos de gráficos disponibles y cuándo usar cada uno.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.sqlbi.com/tools/dax-formatter/" target="_blank" rel="noopener">
+        <span class="card-type tool">Herramienta</span>
+        <h3>DAX Formatter — SQLBI</h3>
+        <p>Formatea y valida expresiones DAX para que sean legibles y bien estructuradas.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ M3 -->
+<section class="modulo-section" id="m3">
+  <div class="container">
+    <div class="section-label">
+      <span class="modulo-num">Módulo 3</span>
+      <span>16 horas · 10 teóricas + 6 prácticas</span>
+    </div>
+    <h2 class="section-title">Transformación de Datos con Power Query</h2>
+    <p class="section-desc">Limpieza, preparación e integración de datos usando el editor de Power Query.</p>
+    <div class="cards-grid">
+
+      <a class="card" href="https://learn.microsoft.com/es-es/power-query/power-query-what-is-power-query" target="_blank" rel="noopener">
+        <span class="card-type doc">Documentación</span>
+        <h3>¿Qué es Power Query? — Microsoft</h3>
+        <p>Documentación oficial: conceptos, interfaz y funciones del editor de consultas.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://learn.microsoft.com/es-es/powerquery-m/power-query-m-function-reference" target="_blank" rel="noopener">
+        <span class="card-type doc">Referencia M</span>
+        <h3>Referencia de funciones del lenguaje M</h3>
+        <p>Todas las funciones del lenguaje M (Power Query) con descripción y ejemplos.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.youtube.com/watch?v=0aeZX1l4JT4" target="_blank" rel="noopener">
+        <span class="card-type video">Video</span>
+        <h3>Power Query: Tutorial completo desde cero</h3>
+        <p>Tutorial en español: limpieza, transformaciones y combinación de tablas.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://gorilla.bi/power-query/" target="_blank" rel="noopener">
+        <span class="card-type blog">Blog especializado</span>
+        <h3>Gorilla.BI — Power Query Tips</h3>
+        <p>Artículos prácticos sobre transformaciones avanzadas, M y automatización.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://excelchamps.com/power-query/" target="_blank" rel="noopener">
+        <span class="card-type blog">Tutoriales</span>
+        <h3>ExcelChamps — Power Query Práctico</h3>
+        <p>Guías paso a paso con capturas para las transformaciones más comunes.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://learn.microsoft.com/es-es/power-query/merge-queries-overview" target="_blank" rel="noopener">
+        <span class="card-type doc">Documentación</span>
+        <h3>Merge y Append de tablas — Microsoft</h3>
+        <p>Guía oficial para combinar tablas: diferencias entre merge y append con ejemplos.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ M4 -->
+<section class="modulo-section" id="m4">
+  <div class="container">
+    <div class="section-label">
+      <span class="modulo-num">Módulo 4</span>
+      <span>13 horas · 7 teóricas + 6 prácticas</span>
+    </div>
+    <h2 class="section-title">Modelado de Datos</h2>
+    <p class="section-desc">Modelos relacionales, tablas de hechos y dimensiones, optimización y buenas prácticas.</p>
+    <div class="cards-grid">
+
+      <a class="card" href="https://learn.microsoft.com/es-es/power-bi/guidance/star-schema" target="_blank" rel="noopener">
+        <span class="card-type doc">Documentación</span>
+        <h3>Esquema en estrella — Microsoft BI Guidance</h3>
+        <p>Por qué usar el esquema estrella, diferencias con el copo de nieve y mejores prácticas.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.sqlbi.com/articles/the-many-to-many-relationships-in-power-bi/" target="_blank" rel="noopener">
+        <span class="card-type blog">Artículo SQLBI</span>
+        <h3>Relaciones muchos a muchos en Power BI</h3>
+        <p>Explicación profunda de relaciones M:M, cuándo usarlas y sus implicaciones.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://learn.microsoft.com/es-es/power-bi/guidance/relationships-active-inactive" target="_blank" rel="noopener">
+        <span class="card-type doc">Documentación</span>
+        <h3>Relaciones activas e inactivas</h3>
+        <p>Cuándo usar relaciones inactivas y cómo activarlas con USERELATIONSHIP en DAX.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.youtube.com/watch?v=MrLnibBRHok" target="_blank" rel="noopener">
+        <span class="card-type video">Video</span>
+        <h3>Modelado de Datos en Power BI — Completo</h3>
+        <p>Tutorial en profundidad: hechos, dimensiones, cardinalidad y dirección de filtros.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://learn.microsoft.com/es-es/power-bi/guidance/model-date-tables" target="_blank" rel="noopener">
+        <span class="card-type doc">Buena práctica</span>
+        <h3>Tabla de fechas en Power BI</h3>
+        <p>Cómo crear y configurar una tabla de fechas correcta para inteligencia temporal.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.sqlbi.com/tools/vertipaq-analyzer/" target="_blank" rel="noopener">
+        <span class="card-type tool">Herramienta</span>
+        <h3>VertiPaq Analyzer — SQLBI</h3>
+        <p>Analiza el rendimiento y el uso de memoria de tu modelo de datos en Power BI.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ M5 -->
+<section class="modulo-section" id="m5">
+  <div class="container">
+    <div class="section-label">
+      <span class="modulo-num">Módulo 5</span>
+      <span>16 horas · 10 teóricas + 6 prácticas</span>
+    </div>
+    <h2 class="section-title">DAX y Creación de Métricas</h2>
+    <p class="section-desc">Lenguaje DAX, medidas, columnas calculadas, contexto de evaluación y KPIs.</p>
+
+    <div class="cards-grid">
+      <a class="card" href="https://dax.guide" target="_blank" rel="noopener">
+        <span class="card-type doc">Referencia DAX</span>
+        <h3>DAX.guide — Referencia completa</h3>
+        <p>Biblioteca de todas las funciones DAX con sintaxis, parámetros y ejemplos interactivos.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.sqlbi.com/articles/understanding-evaluation-context-in-dax/" target="_blank" rel="noopener">
+        <span class="card-type blog">Artículo SQLBI</span>
+        <h3>Contexto de evaluación en DAX</h3>
+        <p>La explicación más clara de contexto de filtro y fila, escrita por los expertos en DAX.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://learn.microsoft.com/es-es/dax/dax-function-reference" target="_blank" rel="noopener">
+        <span class="card-type doc">Microsoft Docs</span>
+        <h3>Referencia de funciones DAX — Microsoft</h3>
+        <p>Documentación oficial de todas las categorías de funciones DAX.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.sqlbi.com/learn/introducing-dax-video-course/" target="_blank" rel="noopener">
+        <span class="card-type curso">Curso gratuito</span>
+        <h3>Introducing DAX — SQLBI (gratis)</h3>
+        <p>Video-curso introductorio gratuito de Alberto Ferrari y Marco Russo, los referentes de DAX.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://learn.microsoft.com/es-es/dax/time-intelligence-functions-dax" target="_blank" rel="noopener">
+        <span class="card-type doc">Documentación</span>
+        <h3>Funciones de inteligencia temporal en DAX</h3>
+        <p>TOTALYTD, SAMEPERIODLASTYEAR, DATEADD y más funciones de tiempo.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.youtube.com/watch?v=h5m3orkjYao" target="_blank" rel="noopener">
+        <span class="card-type video">Video</span>
+        <h3>CALCULATE: la función más importante de DAX</h3>
+        <p>Tutorial dedicado a CALCULATE, FILTER y el manejo del contexto de filtro.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+    </div>
+
+    <!-- Cheatsheet DAX -->
+    <div class="cheatsheet" style="margin-top:32px">
+      <div class="cheatsheet-header">
+        <span class="dot dot-r"></span>
+        <span class="dot dot-y"></span>
+        <span class="dot dot-g"></span>
+        <span style="margin-left:8px">Referencia rápida · Funciones DAX esenciales</span>
+      </div>
+      <div class="cheatsheet-body">
+        <div class="cs-item">
+          <span class="cs-func">SUM()</span>
+          <span class="cs-desc">Suma todos los valores de una columna numérica.</span>
+          <div class="cs-example">SUM(Ventas[Monto])</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">CALCULATE()</span>
+          <span class="cs-desc">Evalúa una expresión modificando el contexto de filtro.</span>
+          <div class="cs-example">CALCULATE(SUM(V[M]), Año=2024)</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">SUMX()</span>
+          <span class="cs-desc">Evalúa una expresión fila por fila y suma los resultados.</span>
+          <div class="cs-example">SUMX(Ventas, [Precio]*[Cant])</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">COUNTROWS()</span>
+          <span class="cs-desc">Cuenta el número de filas en una tabla o expresión de tabla.</span>
+          <div class="cs-example">COUNTROWS(Clientes)</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">DIVIDE()</span>
+          <span class="cs-desc">División segura que maneja el error de división entre cero.</span>
+          <div class="cs-example">DIVIDE([Ventas], [Objetivo], 0)</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">IF()</span>
+          <span class="cs-desc">Retorna un valor si la condición es verdadera, otro si es falsa.</span>
+          <div class="cs-example">IF([Meta]>0, "OK", "Alerta")</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">RELATED()</span>
+          <span class="cs-desc">Trae un valor de una tabla relacionada (lado "uno" de la relación).</span>
+          <div class="cs-example">RELATED(Producto[Categoría])</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">TOTALYTD()</span>
+          <span class="cs-desc">Acumula un valor desde el inicio del año hasta la fecha actual.</span>
+          <div class="cs-example">TOTALYTD([Ventas], Fechas[Fecha])</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">SAMEPERIODLASTYEAR()</span>
+          <span class="cs-desc">Devuelve el mismo período del año anterior para comparativas.</span>
+          <div class="cs-example">CALCULATE([V], SAMEPERIODLASTYEAR(F[F]))</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">ALL()</span>
+          <span class="cs-desc">Elimina todos los filtros de una tabla o columna.</span>
+          <div class="cs-example">CALCULATE([V], ALL(Dim_Región))</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">FILTER()</span>
+          <span class="cs-desc">Devuelve una tabla filtrada según una condición.</span>
+          <div class="cs-example">FILTER(Ventas, [Monto]>1000)</div>
+        </div>
+        <div class="cs-item">
+          <span class="cs-func">DISTINCTCOUNT()</span>
+          <span class="cs-desc">Cuenta los valores únicos en una columna.</span>
+          <div class="cs-example">DISTINCTCOUNT(Ventas[ClienteID])</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ M6 -->
+<section class="modulo-section" id="m6">
+  <div class="container">
+    <div class="section-label">
+      <span class="modulo-num">Módulo 6</span>
+      <span>13 horas · 7 teóricas + 6 prácticas</span>
+    </div>
+    <h2 class="section-title">Dashboards Ejecutivos y Storytelling</h2>
+    <p class="section-desc">Diseño visual, UX en BI, storytelling con datos y publicación en Power BI Service.</p>
+    <div class="cards-grid">
+
+      <a class="card" href="https://www.storytellingwithdata.com/blog" target="_blank" rel="noopener">
+        <span class="card-type blog">Blog referente</span>
+        <h3>Storytelling with Data — Blog de Cole Knaflic</h3>
+        <p>El blog del libro más reconocido sobre comunicación visual de datos.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://learn.microsoft.com/es-es/power-bi/guidance/report-design-tips-use-report-themes" target="_blank" rel="noopener">
+        <span class="card-type doc">Documentación</span>
+        <h3>Temas y diseño de informes — Microsoft</h3>
+        <p>Cómo aplicar temas personalizados y buenas prácticas de diseño en Power BI.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://colorbrewer2.org" target="_blank" rel="noopener">
+        <span class="card-type tool">Herramienta</span>
+        <h3>ColorBrewer 2.0 — Paletas para datos</h3>
+        <p>Genera paletas de colores accesibles y adecuadas para visualizaciones de datos.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://learn.microsoft.com/es-es/power-bi/collaborate-share/service-publish-to-web" target="_blank" rel="noopener">
+        <span class="card-type doc">Documentación</span>
+        <h3>Publicar en Power BI Service</h3>
+        <p>Pasos para publicar, compartir y gestionar reportes en la nube de Power BI.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://www.youtube.com/watch?v=htpYMGTDUmI" target="_blank" rel="noopener">
+        <span class="card-type video">Video</span>
+        <h3>Dashboard ejecutivo en Power BI — Paso a paso</h3>
+        <p>Construcción de un dashboard ejecutivo profesional con buenas prácticas de diseño.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+      <a class="card" href="https://community.fabric.microsoft.com/t5/Data-Stories-Gallery/bd-p/DataStoriesGallery" target="_blank" rel="noopener">
+        <span class="card-type doc">Galería</span>
+        <h3>Data Stories Gallery — Microsoft</h3>
+        <p>Galería oficial de dashboards creados por la comunidad para inspirarte.</p>
+        <span class="card-arrow">↗</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ GLOSARIO -->
+<section class="modulo-section" id="glosario">
+  <div class="container">
+    <div class="section-label">
+      <span class="modulo-num" style="background:var(--carbon)">Referencia</span>
+    </div>
+    <h2 class="section-title">Glosario del Programa</h2>
+    <p class="section-desc">Términos clave que encontrarás a lo largo de todos los módulos.</p>
+    <div class="glosario-grid">
+
+      <div class="glosario-item">
+        <div class="glosario-term">Business Intelligence (BI)</div>
+        <div class="glosario-def">Conjunto de estrategias, procesos y tecnologías para transformar datos en información útil para la toma de decisiones empresariales.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Data-Driven</div>
+        <div class="glosario-def">Enfoque en el que las decisiones se basan en el análisis de datos concretos en lugar de la intuición o la experiencia subjetiva.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">ETL</div>
+        <div class="glosario-def">Extract, Transform, Load. Proceso de extraer datos de fuentes, transformarlos y cargarlos en un destino analítico.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Power Query</div>
+        <div class="glosario-def">Motor de transformación de datos en Power BI (y Excel) que usa el lenguaje M para limpiar, combinar y preparar datos.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Tabla de Hechos (Fact Table)</div>
+        <div class="glosario-def">Tabla central del modelo que almacena métricas cuantitativas (ventas, cantidades) y claves foráneas hacia las dimensiones.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Tabla de Dimensión</div>
+        <div class="glosario-def">Tabla que describe el contexto de los hechos: productos, clientes, fechas, geografía. Contiene atributos descriptivos.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Esquema Estrella</div>
+        <div class="glosario-def">Diseño de modelo donde una tabla de hechos central se conecta directamente a múltiples tablas de dimensión. Óptimo para Power BI.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">DAX</div>
+        <div class="glosario-def">Data Analysis Expressions. Lenguaje de fórmulas de Power BI para crear medidas, columnas calculadas y tablas calculadas.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Medida (Measure)</div>
+        <div class="glosario-def">Cálculo DAX que se evalúa dinámicamente según el contexto del reporte. No almacena datos, solo calcula al momento de visualizar.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Contexto de Filtro</div>
+        <div class="glosario-def">El conjunto de filtros activos que determinan qué filas se evalúan en una medida DAX (segmentadores, filas de matriz, etc.).</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Cardinalidad</div>
+        <div class="glosario-def">Número de valores únicos en una columna. Alta cardinalidad = muchos valores únicos. Impacta el rendimiento del modelo.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">KPI</div>
+        <div class="glosario-def">Key Performance Indicator. Métrica clave que mide el desempeño de un objetivo empresarial específico.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Slicer / Segmentador</div>
+        <div class="glosario-def">Control visual en Power BI que permite filtrar interactivamente los datos de un reporte mediante selección del usuario.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Power BI Service</div>
+        <div class="glosario-def">Plataforma en la nube de Microsoft para publicar, compartir y colaborar en reportes e informes de Power BI.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Granularidad</div>
+        <div class="glosario-def">El nivel de detalle de los datos en una tabla. Granularidad fina = un registro por transacción; gruesa = datos agregados.</div>
+      </div>
+
+      <div class="glosario-item">
+        <div class="glosario-term">Normalización</div>
+        <div class="glosario-def">Proceso de organizar datos en múltiples tablas para reducir redundancia. Contrasta con la desnormalización usada en BI.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ DATASETS -->
+<section class="modulo-section" id="datasets">
+  <div class="container">
+    <div class="section-label">
+      <span class="modulo-num" style="background:var(--carbon)">Práctica</span>
+    </div>
+    <h2 class="section-title">Datasets para Practicar</h2>
+    <p class="section-desc">Conjuntos de datos públicos y gratuitos, organizados por módulo donde son más útiles.</p>
+
+    <a class="dataset-row" href="https://learn.microsoft.com/es-es/power-bi/create-reports/sample-datasets" target="_blank" rel="noopener">
+      <div class="dataset-icon">📊</div>
+      <div>
+        <div class="dataset-name">Datasets de muestra oficiales — Microsoft Power BI</div>
+        <div class="dataset-desc">Adventure Works, Retail Analysis, Human Resources y más. Los más usados para aprender Power BI.</div>
+      </div>
+      <span class="dataset-modulo">M2 · M4 · M5</span>
+      <span class="dataset-source">Microsoft</span>
+    </a>
+
+    <a class="dataset-row" href="https://www.kaggle.com/datasets/kyanyoga/sample-sales-data" target="_blank" rel="noopener">
+      <div class="dataset-icon">🛒</div>
+      <div>
+        <div class="dataset-name">Sample Sales Data — Kaggle</div>
+        <div class="dataset-desc">Dataset de ventas con órdenes, productos, clientes y regiones. Ideal para modelado y DAX.</div>
+      </div>
+      <span class="dataset-modulo">M3 · M4 · M5</span>
+      <span class="dataset-source">Kaggle</span>
+    </a>
+
+    <a class="dataset-row" href="https://github.com/microsoft/powerbi-desktop-samples" target="_blank" rel="noopener">
+      <div class="dataset-icon">📁</div>
+      <div>
+        <div class="dataset-name">Power BI Desktop Samples — GitHub Microsoft</div>
+        <div class="dataset-desc">Archivos .pbix de ejemplo listos para abrir en Power BI Desktop con modelos ya construidos.</div>
+      </div>
+      <span class="dataset-modulo">M2 · M4 · M6</span>
+      <span class="dataset-source">GitHub</span>
+    </a>
+
+    <a class="dataset-row" href="https://datos.gob.pe" target="_blank" rel="noopener">
+      <div class="dataset-icon">🇵🇪</div>
+      <div>
+        <div class="dataset-name">Portal de Datos Abiertos del Perú</div>
+        <div class="dataset-desc">Datos oficiales del gobierno peruano en formatos CSV y Excel. Ideal para casos de uso local.</div>
+      </div>
+      <span class="dataset-modulo">M1 · M3</span>
+      <span class="dataset-source">Gobierno del Perú</span>
+    </a>
+
+    <a class="dataset-row" href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce" target="_blank" rel="noopener">
+      <div class="dataset-icon">🏪</div>
+      <div>
+        <div class="dataset-name">Olist E-commerce Dataset — Kaggle</div>
+        <div class="dataset-desc">Dataset multi-tabla de e-commerce brasileño: pedidos, pagos, reseñas, vendedores. Perfecto para modelado relacional.</div>
+      </div>
+      <span class="dataset-modulo">M4 · M5</span>
+      <span class="dataset-source">Kaggle</span>
+    </a>
+
+    <a class="dataset-row" href="https://ourworldindata.org/charts" target="_blank" rel="noopener">
+      <div class="dataset-icon">🌍</div>
+      <div>
+        <div class="dataset-name">Our World in Data</div>
+        <div class="dataset-desc">Datos globales sobre economía, salud, educación y más. Descargables en CSV, excelentes para storytelling.</div>
+      </div>
+      <span class="dataset-modulo">M1 · M6</span>
+      <span class="dataset-source">Our World in Data</span>
+    </a>
+
+    <a class="dataset-row" href="https://www.kaggle.com/datasets/gregorut/videogamesales" target="_blank" rel="noopener">
+      <div class="dataset-icon">🎮</div>
+      <div>
+        <div class="dataset-name">Video Game Sales — Kaggle</div>
+        <div class="dataset-desc">Ventas de videojuegos por plataforma, género y región. Simple, limpio y divertido para practicar DAX.</div>
+      </div>
+      <span class="dataset-modulo">M3 · M5</span>
+      <span class="dataset-source">Kaggle</span>
+    </a>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Recursos compilados para el <strong>Bootcamp Profesional en Business Intelligence con Power BI</strong><br>
+  <strong>USMP Virtual</strong> · Docente: Mag. Edwin Santos<br><br>
+  <a href="https://www.usmpvirtual.edu.pe" target="_blank">www.usmpvirtual.edu.pe</a>
+  &nbsp;·&nbsp;
+  <a href="https://learn.microsoft.com/es-es/power-bi/" target="_blank">Microsoft Learn Power BI</a>
+  </p>
+</footer>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+
+  // Active nav link
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.modulos-nav a');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.modulos-nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
